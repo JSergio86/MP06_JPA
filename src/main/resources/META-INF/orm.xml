@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence/orm http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
+    <description>The minimal mappings for a persistent entity in XML.</description>
+
+    <!-- https://en.wikibooks.org/wiki/Java_Persistence/OneToMany -->
+
+    <entity name="Magazine" class="model.Magazine" access="FIELD">
+        <table name="revistes"/>
+        <attributes>
+            <id name="magazineId" >
+                <column name="id_revista"/>
+            </id>
+            <basic name="title">
+                <column name="titol" length="30"/>
+            </basic>
+            <basic name="publicationDate">
+                <column name="data_publicacio"/>
+            </basic>
+
+            <!-- <one-to-many name="articles"  target-entity="model.Article" mapped-by="id_revista" >
+             <cascade>
+                    <cascade-all/>
+                </cascade>
+            </one-to-many> -->
+
+        </attributes>
+    </entity>
+
+    <entity name="Article" class="model.Article" access="FIELD" >
+        <table name="articles" />
+        <attributes >
+            <id name="articleId">
+                <column name="id_article"/>
+            </id>
+            <basic name="title">
+                <column name="titol" length="30"/>
+            </basic>
+            <basic name="publicationDate">
+                <column name="data_creacio"/>
+            </basic>
+            <basic name="publishable">
+                <column name="publicable"/>
+            </basic>
+
+            <many-to-one name="author" fetch="LAZY" >
+                <join-column name="id_autor"  />
+                <cascade>
+                    <cascade-all/>
+                </cascade>
+            </many-to-one>
+        </attributes>
+    </entity>
+
+
+    <entity name="Author" class="model.Author" access="FIELD">
+        <table name="autors"/>
+        <attributes>
+            <id name="authorId" >
+                <column name="id_autor"></column>
+            </id>
+            <basic name="name">
+                <column name="nom" length="30"/>
+            </basic>
+            <basic name="nationality">
+                <column name="nacionalitat" length="12"/>
+            </basic>
+            <basic name="birthYear">
+                <column name="any_naixement" length="4"/>
+            </basic>
+            <basic name="active">
+                <column name="actiu"/>
+            </basic>
+        </attributes>
+    </entity>
+
+</entity-mappings>

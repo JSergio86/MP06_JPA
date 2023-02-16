@@ -1,0 +1,2 @@
+# JPAMagazines
+JPAMagazines
