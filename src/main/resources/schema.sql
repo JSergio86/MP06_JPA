@@ -32,8 +32,6 @@ idMapa INT,
 idPartida INT PRIMARY KEY,
 type TEXT,
 result TEXT,
-FOREIGN KEY (idJugador) REFERENCES Jugadores(idJugador) ON DELETE CASCADE,
-FOREIGN KEY (idMapa) REFERENCES Mapas(idMapa) ON DELETE CASCADE
 );
 
 CREATE TABLE Armas (

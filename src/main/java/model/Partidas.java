@@ -22,13 +22,17 @@ public class Partidas implements Serializable {
      @Cascade(CascadeType.ALL)
      private List<Article> articles = new ArrayList<Article> ();
 
-      */
-
     @OneToMany
     @JoinColumn(name="idjugador", referencedColumnName="idjugador")
+    */
+
     @Column(name = "idjugador")
     int idjugador;
 
+    /*
+    @OneToMany
+    @JoinColumn(name="idmapa", referencedColumnName="idmapa")
+     */
     @Column(name = "idmapa")
     int idmapa;
 
@@ -37,7 +41,6 @@ public class Partidas implements Serializable {
 
     @Column(name = "result")
     String result;
-
 
     public Partidas(int idpartida, int idjugador, int idmapa, String type, String result) {
         super();

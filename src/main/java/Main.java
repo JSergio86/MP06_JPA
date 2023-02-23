@@ -1,11 +1,10 @@
 import java.io.IOException;
 import java.sql.Connection;
-import java.util.ArrayList;
 import java.util.List;
 
-import controller.ArticleController;
-import controller.AuthorController;
-import controller.MagazineController;
+import controller.ArmasController;
+import controller.JugadoresController;
+import controller.PartidasController;
 import database.ConnectionFactory;
 import model.*;
 import org.hibernate.HibernateException;
@@ -14,12 +13,12 @@ import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.service.ServiceRegistry;
 import view.Menu;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.Query;
 
 
 public class Main {
@@ -41,7 +40,7 @@ public class Main {
   public static EntityManagerFactory createEntityManagerFactory(){
     EntityManagerFactory emf;
     try {
-      emf = Persistence.createEntityManagerFactory("JPAMagazines");
+      emf = Persistence. createEntityManagerFactory("JPAMagazines");
     } catch (Throwable ex) {
       System.err.println("Failed to create EntityManagerFactory object."+ ex);
       throw new ExceptionInInitializerError(ex);
@@ -50,19 +49,16 @@ public class Main {
   }
 
   public static void main(String[] args) {
-    ArrayList<Magazine> revistes = new ArrayList();
-
     ConnectionFactory connectionFactory = ConnectionFactory.getInstance();
     Connection c = connectionFactory.connect();
 
-
     EntityManagerFactory entityManagerFactory = createEntityManagerFactory();
-    //sessionObj = buildSessionFactory().openSession();
+
+    PartidasController partidasController = new PartidasController(c, entityManagerFactory);
+    JugadoresController jugadoresController = new JugadoresController(c, entityManagerFactory);
+    ArmasController armasController = new ArmasController(c, entityManagerFactory);
 
 
-    AuthorController authorController = new AuthorController(c, entityManagerFactory);
-    ArticleController articleController = new ArticleController(c, entityManagerFactory);
-    MagazineController magazineController = new MagazineController(c, entityManagerFactory);
 
     Menu menu = new Menu();
     int opcio;
@@ -70,24 +66,38 @@ public class Main {
 
     switch (opcio) {
 
-      case 1:
 
+
+      case 1:
         System.out.println("1!!");
         try {
+          List<Partidas> partidas = partidasController.readArticlesFile("src/main/resources/Partidas.csv");
+          List<Jugadores> jugadores = jugadoresController.readArticlesFile("src/main/resources/Jugador.csv");
+          List<Armas> armas = armasController.readArticlesFile("src/main/resources/Armas.csv");
 
-          List<Author> authors = authorController.readAuthorsFile("src/main/resources/autors.txt");
-          List<Magazine> magazines = articleController.readArticlesFile("src/main/resources/articles.txt", "src/main/resources/revistes.txt", "src/main/resources/autors.txt");
-          List<Article> articles = articleController.readArticlesFile("src/main/resources/articles.txt", "src/main/resources/autors.txt");
 
-          System.out.println("Revistes llegides des del fitxer");
-          for (int i = 0; i < magazines.size(); i++) {
-            System.out.println(magazines.get(i).toString()+"\n");
-            for (int j = 0; j < magazines.get(i).getArticles().size(); j++) {
-              articleController.addArticle(magazines.get(i).getArticles().get(j));
-              authorController.addAuthor(magazines.get(i).getArticles().get(j).getAuthor());
-            }
-            magazineController.addMagazine(magazines.get(i));
+          System.out.println("Armas\n");
+          for(Armas arma: armas){
+            armasController.addArmas(arma);
+
           }
+          armasController.listArticles();
+
+
+          System.out.println("\nJugadores\n");
+          for(Jugadores jugador: jugadores){
+            jugadoresController.addPartidas(jugador);
+
+          }
+          jugadoresController.listArticles();
+
+
+          System.out.println("\nPartidas\n");
+          for(Partidas partida: partidas){
+            partidasController.addPartidas(partida);
+
+          }
+          partidasController.listArticles();
 
         } catch (NumberFormatException | IOException e) {
 
@@ -95,67 +105,25 @@ public class Main {
         }
         break;
 
+      case 2:
+        System.out.println("hola");
+        EntityManager em = entityManagerFactory.createEntityManager();
+        em.getTransaction().begin();
+
+        Query query = em.createNativeQuery("DROP TABLE Armas CASCADE");
+        query.executeUpdate();
+
+        em.getTransaction().commit();
+        em.close();
+        break;
+
       default:
         System.out.println("Adeu!!");
         System.exit(1);
         break;
 
+
     }
   }
 }
 
-
-/*
-
-
-    static User userObj;
-    static Session sessionObj;
-    static SessionFactory sessionFactoryObj;
-
-    private static SessionFactory buildSessionFactory() {
-        // Creating Configuration Instance & Passing Hibernate Configuration File
-        Configuration configObj = new Configuration();
-        configObj.configure("hibernate.cfg.xml");
-
-        // Since Hibernate Version 4.x, ServiceRegistry Is Being Used
-        ServiceRegistry serviceRegistryObj = new StandardServiceRegistryBuilder().applySettings(configObj.getProperties()).build();
-
-        // Creating Hibernate SessionFactory Instance
-        sessionFactoryObj = configObj.buildSessionFactory(serviceRegistryObj);
-        return sessionFactoryObj;
-    }
-
-    public static void main(String[] args) {
-        System.out.println(".......Hibernate Maven Example.......\n");
-        try {
-            sessionObj = buildSessionFactory().openSession();
-            sessionObj.beginTransaction();
-
-            for(int i = 101; i <= 105; i++) {
-                userObj = new User();
-                userObj.setUserid(i);
-                userObj.setUsername("Editor " + i);
-                userObj.setCreatedBy("Administrator");
-                userObj.setCreatedDate(new Date());
-
-                sessionObj.save(userObj);
-            }
-            System.out.println("\n.......Records Saved Successfully To The Database.......\n");
-
-            // Committing The Transactions To The Database
-            sessionObj.getTransaction().commit();
-        } catch(Exception sqlException) {
-            if(null != sessionObj.getTransaction()) {
-                System.out.println("\n.......Transaction Is Being Rolled Back.......");
-                sessionObj.getTransaction().rollback();
-            }
-            sqlException.printStackTrace();
-        } finally {
-            if(sessionObj != null) {
-                sessionObj.close();
-            }
-        }
-    }
-
-
-*/
