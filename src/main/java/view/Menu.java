@@ -19,8 +19,8 @@ public class Menu {
             System.out.println("1. Crear tablas");
             System.out.println("2. Rellenar tablas");
             System.out.println("3. Borrar tablas");
-            System.out.println("4. Listar una columna");
-            System.out.println("5. Listar tabla");
+            System.out.println("4. Listar una tabla");
+            System.out.println("5. Listar tablas");
             System.out.println("6. Listar texto/num concreto");
             System.out.println("7. Listar condicion");
             System.out.println("8. Modificar registro");

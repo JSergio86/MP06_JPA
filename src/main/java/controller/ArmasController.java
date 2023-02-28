@@ -5,6 +5,7 @@ import model.Partidas;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Query;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -105,6 +106,17 @@ public class ArmasController {
         em.getTransaction().begin();
         Partidas article = (Partidas) em.find(Partidas.class, articleId);
         em.remove(article);
+        em.getTransaction().commit();
+        em.close();
+    }
+
+    public void deleteTable(){
+        EntityManager em = entityManagerFactory.createEntityManager();
+        em.getTransaction().begin();
+
+        Query query = em.createNativeQuery("DROP TABLE Armas CASCADE");
+        query.executeUpdate();
+
         em.getTransaction().commit();
         em.close();
     }

@@ -1,5 +1,6 @@
 package controller;
 
+import model.Mapas;
 import model.Partidas;
 
 import javax.persistence.EntityManager;
@@ -9,27 +10,26 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Connection;
-import java.util.*;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
 
-public class PartidasController {
+public class MapasController {
   private Connection connection;
   private EntityManagerFactory entityManagerFactory;
 
 
-  public PartidasController(Connection connection) {
+  public MapasController(Connection connection) {
     this.connection = connection;
   }
 
-  public PartidasController(Connection connection, EntityManagerFactory entityManagerFactory) {
+  public MapasController(Connection connection, EntityManagerFactory entityManagerFactory) {
     this.connection = connection;
     this.entityManagerFactory = entityManagerFactory;
   }
 
   /**
-   * @param partidasFile Aquest String correspon amb l'arxiu on s'emmagatzemen les
+   * @param mapasFile Aquest String correspon amb l'arxiu on s'emmagatzemen les
    *                     dades de les isntancies de Revista
    * @return ArrayList d'objectes Revista, amb els seus articles i la
    * informació de l'autor
@@ -45,39 +45,46 @@ public class PartidasController {
    *                     llistaRevistes
    *                     .getRevista(i).getArticle(j).getAutor()<>nil</br>
    */
-  public List<Partidas> readArticlesFile(String partidasFile) throws IOException {
-    int idpartida;
-    int idjugador;
+  public List<Mapas> readArticlesFile(String mapasFile) throws IOException {
     int idmapa;
-    String type;
-    String result;
+    String name;
+    String porcentaje_win;
+    int wins ;
+    int losses;
+    float kd;
+    float adr;
+    float acs;
 
-    BufferedReader br = new BufferedReader(new FileReader(partidasFile));
+
+    BufferedReader br = new BufferedReader(new FileReader(mapasFile));
     String linea = "";
-    List<Partidas> partidaList = new ArrayList<>();
+    List<Mapas> mapasList = new ArrayList<>();
 
     while ((linea = br.readLine()) != null) {
       StringTokenizer str = new StringTokenizer(linea, ",");
       idmapa = Integer.parseInt(str.nextToken());
-      idjugador = Integer.parseInt(str.nextToken());
-      idpartida = Integer.parseInt(str.nextToken());
-      type = str.nextToken();
-      result = str.nextToken();
+      name = str.nextToken();
+      porcentaje_win = str.nextToken();
+      wins = Integer.parseInt(str.nextToken());
+      losses = Integer.parseInt(str.nextToken());
+      kd = Float.parseFloat(str.nextToken());
+      adr = Float.parseFloat(str.nextToken());
+      acs = Float.parseFloat(str.nextToken());
 
-      partidaList.add(new Partidas(idpartida, idjugador, idmapa, type, result));
-
+      mapasList.add(new Mapas(idmapa, name, porcentaje_win, wins, losses, kd, adr, acs));
     }
+
     br.close();
 
-    return partidaList;
+    return mapasList;
   }
 
 
   /* Method to CREATE a Partidas in the database */
-  public void addPartidas(Partidas partidas) {
+  public void addMapas(Mapas mapas) {
     EntityManager em = entityManagerFactory.createEntityManager();
     em.getTransaction().begin();
-    em.merge(partidas);
+    em.merge(mapas);
     em.getTransaction().commit();
     em.close();
   }
@@ -86,10 +93,10 @@ public class PartidasController {
   public void listArticles() {
     EntityManager em = entityManagerFactory.createEntityManager();
     em.getTransaction().begin();
-    List<Partidas> result = em.createQuery("from Partidas", Partidas.class)
+    List<Mapas> result = em.createQuery("from Mapas", Mapas.class)
         .getResultList();
-    for (Partidas partidas : result) {
-      System.out.println(partidas.toString());
+    for (Mapas mapas : result) {
+      System.out.println(mapas.toString());
     }
     em.getTransaction().commit();
     em.close();
@@ -99,7 +106,7 @@ public class PartidasController {
   public void updateArticle(Integer articleId) {
     EntityManager em = entityManagerFactory.createEntityManager();
     em.getTransaction().begin();
-    Partidas article = (Partidas) em.find(Partidas.class, articleId);
+    Mapas article = (Mapas) em.find(Mapas.class, articleId);
     em.merge(article);
     em.getTransaction().commit();
     em.close();
@@ -109,7 +116,7 @@ public class PartidasController {
   public void deleteArticle(Integer articleId) {
     EntityManager em = entityManagerFactory.createEntityManager();
     em.getTransaction().begin();
-    Partidas article = (Partidas) em.find(Partidas.class, articleId);
+    Mapas article = (Mapas) em.find(Mapas.class, articleId);
     em.remove(article);
     em.getTransaction().commit();
     em.close();
@@ -119,7 +126,7 @@ public class PartidasController {
     EntityManager em = entityManagerFactory.createEntityManager();
     em.getTransaction().begin();
 
-    Query query = em.createNativeQuery("DROP TABLE Partidas CASCADE");
+    Query query = em.createNativeQuery("DROP TABLE Mapas CASCADE");
     query.executeUpdate();
 
     em.getTransaction().commit();

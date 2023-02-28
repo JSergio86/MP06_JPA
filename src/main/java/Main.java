@@ -1,12 +1,8 @@
 import java.io.IOException;
 import java.sql.Connection;
-import java.util.List;
 
-import controller.ArmasController;
-import controller.JugadoresController;
-import controller.PartidasController;
+import controller.*;
 import database.ConnectionFactory;
-import model.*;
 import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.Metadata;
@@ -15,10 +11,8 @@ import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import view.Menu;
 
-import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.persistence.Query;
 
 
 public class Main {
@@ -48,81 +42,64 @@ public class Main {
     return emf;
   }
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws IOException {
     ConnectionFactory connectionFactory = ConnectionFactory.getInstance();
     Connection c = connectionFactory.connect();
 
     EntityManagerFactory entityManagerFactory = createEntityManagerFactory();
 
-    PartidasController partidasController = new PartidasController(c, entityManagerFactory);
-    JugadoresController jugadoresController = new JugadoresController(c, entityManagerFactory);
-    ArmasController armasController = new ArmasController(c, entityManagerFactory);
-
-
+    DatabaseController databaseController = new DatabaseController(c, entityManagerFactory);
 
     Menu menu = new Menu();
     int opcio;
     opcio = menu.mainMenu();
 
-    switch (opcio) {
+    while (opcio > 0 && opcio < 13) {
+      switch (opcio) {
+        case 1:
+          databaseController.crearTablas();
+          break;
 
+        case 2:
+          databaseController.insertarDatos();
+          break;
 
-
-      case 1:
-        System.out.println("1!!");
-        try {
-          List<Partidas> partidas = partidasController.readArticlesFile("src/main/resources/Partidas.csv");
-          List<Jugadores> jugadores = jugadoresController.readArticlesFile("src/main/resources/Jugador.csv");
-          List<Armas> armas = armasController.readArticlesFile("src/main/resources/Armas.csv");
-
-
-          System.out.println("Armas\n");
-          for(Armas arma: armas){
-            armasController.addArmas(arma);
-
+        case 3:
+          databaseController.eliminarTablas();
+          try {
+            Thread.sleep(1000);
+          } catch (InterruptedException e) {
+            throw new RuntimeException(e);
           }
-          armasController.listArticles();
+          break;
 
-
-          System.out.println("\nJugadores\n");
-          for(Jugadores jugador: jugadores){
-            jugadoresController.addPartidas(jugador);
-
+        case 4:
+          databaseController.listarUnaTabla();
+          try {
+            Thread.sleep(1000);
+          } catch (InterruptedException e) {
+            throw new RuntimeException(e);
           }
-          jugadoresController.listArticles();
+          break;
 
-
-          System.out.println("\nPartidas\n");
-          for(Partidas partida: partidas){
-            partidasController.addPartidas(partida);
-
+        case 5:
+          databaseController.listarTablas();
+          try {
+            Thread.sleep(1000);
+          } catch (InterruptedException e) {
+            throw new RuntimeException(e);
           }
-          partidasController.listArticles();
-
-        } catch (NumberFormatException | IOException e) {
-
-          e.printStackTrace();
-        }
-        break;
-
-      case 2:
-        System.out.println("hola");
-        EntityManager em = entityManagerFactory.createEntityManager();
-        em.getTransaction().begin();
-
-        Query query = em.createNativeQuery("DROP TABLE Armas CASCADE");
-        query.executeUpdate();
-
-        em.getTransaction().commit();
-        em.close();
-        break;
-
-      default:
-        System.out.println("Adeu!!");
-        System.exit(1);
-        break;
+          break;
 
 
+        default:
+          System.out.println("Adeu!!");
+          System.exit(1);
+          break;
+
+
+      }
+      opcio = menu.mainMenu();
     }
   }
 }

@@ -31,7 +31,7 @@ idJugador INT,
 idMapa INT,
 idPartida INT PRIMARY KEY,
 type TEXT,
-result TEXT,
+result TEXT
 );
 
 CREATE TABLE Armas (
