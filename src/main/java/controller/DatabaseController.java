@@ -5,7 +5,9 @@ import model.Jugadores;
 import model.Mapas;
 import model.Partidas;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -22,6 +24,7 @@ public class DatabaseController {
     JugadoresController jugadoresController;
     ArmasController armasController;
     MapasController mapasController;
+    Scanner sc = new Scanner(System.in);
 
     public DatabaseController(Connection connection) {
         this.connection = connection;
@@ -120,6 +123,56 @@ public class DatabaseController {
 
         System.out.println("\nTabla: Partidas");
         partidasController.listArticles();
+    }
+
+    public void modificarRegistro(){
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        System.out.println("¿Que idarma quieres eliminar?");
+        int idarma = sc.nextInt();
+
+        Armas arma = entityManager.find(Armas.class, idarma);
+
+        System.out.println("¿Que nuevo nombre quieres poner?");
+        String nombre = sc.nextLine();
+
+        arma.setName(nombre);
+
+        // y así sucesivamente para todos los campos que desees modificar
+        entityManager.merge(arma);
+        entityManager.getTransaction().commit();
+
+
+
+    }
+
+    public void eliminarRegistro(){
+        EntityManager em = entityManagerFactory.createEntityManager();
+
+        System.out.println("¿Que idarma quieres eliminar?");
+        int idarma = sc.nextInt();
+        /*
+        // Modificar un registro concreto
+        Armas arma = em.find(Armas.class, idarma);
+        if (arma != null) {
+            arma.setPropiedad("nuevoValor");
+            em.getTransaction().begin();
+            em.flush();
+            em.getTransaction().commit();
+        }
+
+         */
+
+        // Eliminar un registro concreto
+        Armas armaAEliminar = em.find(Armas.class, idarma);
+        if (armaAEliminar != null) {
+            em.getTransaction().begin();
+            em.remove(armaAEliminar);
+            em.flush();
+            em.getTransaction().commit();
+        }
+
+        em.close();
+
     }
 
     public void eliminarTablas() {
