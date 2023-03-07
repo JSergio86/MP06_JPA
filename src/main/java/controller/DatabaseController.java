@@ -8,6 +8,7 @@ import model.Partidas;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.Query;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -126,52 +127,319 @@ public class DatabaseController {
     }
 
     public void modificarRegistro(){
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
-        System.out.println("¿Que idarma quieres eliminar?");
+        System.out.println("Elige la tabla que desea eliminar un conjunto de registros. 1.Jugadores, 2.Mapas, 3.Armas, 4.Partidas");
+        int opcion = sc.nextInt();
+
+        switch (opcion){
+            case 1:
+                EntityManager em = entityManagerFactory.createEntityManager();
+                System.out.println("¿Que idjugador quieres modificar?");
+                int id = sc.nextInt();
+
+                System.out.println("Escribe la columna que quiere modificar");
+                String columna = sc.nextLine();
+
+                System.out.println("Escribe el nuevo valor");
+                String valor = sc.nextLine();
+
+                // Modificar un registro concreto
+                Jugadores jugador = em.find(Jugadores.class, id);
+
+                if(columna.equals("rank")){
+                    if (jugador != null) {
+                        jugador.setRank(valor);
+                        em.getTransaction().begin();
+                        em.flush();
+                        em.getTransaction().commit();
+                    }
+                }
+
+                else if(columna.equals("wins")){
+                    if (jugador != null) {
+                        jugador.setWins(Integer.parseInt(valor));
+                        em.getTransaction().begin();
+                        em.flush();
+                        em.getTransaction().commit();
+                    }
+                }
+
+                else if(columna.equals("kills")){
+                    if (jugador != null) {
+                        jugador.setKills(Integer.parseInt(valor));
+                        em.getTransaction().begin();
+                        em.flush();
+                        em.getTransaction().commit();
+                    }
+                }
+
+                else if(columna.equals("deaths")){
+                    if (jugador != null) {
+                        jugador.setDeaths(Integer.parseInt(valor));
+                        em.getTransaction().begin();
+                        em.flush();
+                        em.getTransaction().commit();
+                    }
+                }
+
+                else if(columna.equals("assists")){
+                    if (jugador != null) {
+                        jugador.setAssists(Integer.parseInt(valor));
+                        em.getTransaction().begin();
+                        em.flush();
+                        em.getTransaction().commit();
+                    }
+                }
+
+
+                em.close();
+                break;
+            case 3:
+                EntityManager emArma = entityManagerFactory.createEntityManager();
+                System.out.println("¿Que idarma quieres modificar?");
+                int idarma = sc.nextInt();
+
+                System.out.println("Escribe el nuevo nombre del arma");
+                String nombre = sc.nextLine();
+
+                System.out.println("Escribe el nuevo tipo del arma");
+                String tipo = sc.nextLine();
+
+                // Modificar un registro concreto
+                Armas arma = emArma.find(Armas.class, idarma);
+                if (arma != null) {
+                    arma.setName(nombre);
+                    arma.setType(tipo);
+                    emArma.getTransaction().begin();
+                    emArma.flush();
+                    emArma.getTransaction().commit();
+                }
+
+                emArma.close();
+                break;
+        }
+        EntityManager em = entityManagerFactory.createEntityManager();
+        System.out.println("¿Que idarma quieres modificar?");
         int idarma = sc.nextInt();
 
-        Armas arma = entityManager.find(Armas.class, idarma);
-
-        System.out.println("¿Que nuevo nombre quieres poner?");
+        System.out.println("Escribe el nuevo nombre del arma");
         String nombre = sc.nextLine();
 
-        arma.setName(nombre);
+        System.out.println("Escribe el nuevo tipo del arma");
+        String tipo = sc.nextLine();
 
-        // y así sucesivamente para todos los campos que desees modificar
-        entityManager.merge(arma);
-        entityManager.getTransaction().commit();
-
-
-
-    }
-
-    public void eliminarRegistro(){
-        EntityManager em = entityManagerFactory.createEntityManager();
-
-        System.out.println("¿Que idarma quieres eliminar?");
-        int idarma = sc.nextInt();
-        /*
         // Modificar un registro concreto
         Armas arma = em.find(Armas.class, idarma);
         if (arma != null) {
-            arma.setPropiedad("nuevoValor");
+            arma.setName(nombre);
+            arma.setType(tipo);
             em.getTransaction().begin();
-            em.flush();
-            em.getTransaction().commit();
-        }
-
-         */
-
-        // Eliminar un registro concreto
-        Armas armaAEliminar = em.find(Armas.class, idarma);
-        if (armaAEliminar != null) {
-            em.getTransaction().begin();
-            em.remove(armaAEliminar);
             em.flush();
             em.getTransaction().commit();
         }
 
         em.close();
+
+    }
+
+    public void eliminarRegistro(){
+        try {
+            EntityManager em = entityManagerFactory.createEntityManager();
+            System.out.println("¿De que tabla quieres eliminar un registro? 1.Jugadores, 2.Mapas, 3.Armas, 4.Partidas");
+            int tabla = sc.nextInt();
+
+            switch (tabla){
+                case 1:
+                    System.out.println("¿Que idjugador quieres eliminar?");
+                    int idjugador = sc.nextInt();
+
+                    // Eliminar un registro concreto
+                    Jugadores jugadorAEliminar = em.find(Jugadores.class, idjugador);
+                    if (jugadorAEliminar != null) {
+                        em.getTransaction().begin();
+                        em.remove(jugadorAEliminar);
+                        em.flush();
+                        em.getTransaction().commit();
+                    }
+                    break;
+
+                case 2:
+                    System.out.println("¿Que idmapa quieres eliminar?");
+                    int idmapa = sc.nextInt();
+
+                    // Eliminar un registro concreto
+                    Mapas mapaAEliminar = em.find(Mapas.class, idmapa);
+                    if (mapaAEliminar != null) {
+                        em.getTransaction().begin();
+                        em.remove(mapaAEliminar);
+                        em.flush();
+                        em.getTransaction().commit();
+                    }
+                    break;
+
+                case 3:
+                    System.out.println("¿Que idarma quieres eliminar?");
+                    int idarma = sc.nextInt();
+
+                    // Eliminar un registro concreto
+                    Armas armaAEliminar = em.find(Armas.class, idarma);
+                    if (armaAEliminar != null) {
+                        em.getTransaction().begin();
+                        em.remove(armaAEliminar);
+                        em.flush();
+                        em.getTransaction().commit();
+                    }
+                    break;
+
+                case 4:
+                    System.out.println("¿Que idpartida quieres eliminar?");
+                    int idpartida = sc.nextInt();
+
+                    // Eliminar un registro concreto
+                    Partidas partidaAEliminar = em.find(Partidas.class, idpartida);
+                    if (partidaAEliminar != null) {
+                        em.getTransaction().begin();
+                        em.remove(partidaAEliminar);
+                        em.flush();
+                        em.getTransaction().commit();
+                    }
+                    break;
+            }
+
+            em.close();
+        } catch (Exception e){
+            System.out.println("No se pudo eliminar: "+ e);
+        }
+
+    }
+
+    public void eliminarConjunto(){
+        System.out.println("Elige la tabla que desea eliminar un conjunto de registros. 1.Jugadores, 2.Mapas, 3.Armas, 4.Partidas");
+        int opcion = sc.nextInt();
+
+        EntityManager em = entityManagerFactory.createEntityManager();
+        System.out.println("Pon la columna donde desea eliminar el conjunto de registros ");
+        switch (opcion){
+            case 1:
+                System.out.println("\nTabla: Jugadores");
+                jugadoresController.listArticles();
+                break;
+            case 2:
+                System.out.println("\nTabla: Mapas");
+                mapasController.listArticles();
+                break;
+            case 3:
+                System.out.println("\nTabla: Armas");
+                armasController.listArticles();
+                break;
+            case 4:
+                System.out.println("\nTabla: Partidas");
+                partidasController.listArticles();
+                break;
+        }
+
+        String columna = sc.next();
+
+
+        System.out.println("Indica el operador que desea utilizar. Por ejemplo > <");
+        String operador = sc.next();
+
+        System.out.println("Indica el valor que desea eliminar");
+        int valor = sc.nextInt();
+
+        switch (opcion){
+                case 1:
+                    try {
+                        // Obtener los registros a eliminar
+                        Query query = em.createQuery("SELECT a FROM Jugadores a WHERE a." + columna + " " + operador + " :valor");
+                        query.setParameter("valor", valor);
+                        List<Jugadores> jugadoresAEliminar = query.getResultList();
+
+                        // Eliminar los registros
+                        em.getTransaction().begin();
+                        for (Jugadores jugadores : jugadoresAEliminar) {
+                            em.remove(jugadores);
+                        }
+                        em.flush();
+                        em.getTransaction().commit();
+                        System.out.println("Se ha eliminado correctamente");
+                        System.out.println("\nTabla: Jugadores");
+                        jugadoresController.listArticles();
+                        Thread.sleep(1000);
+                    }catch (Exception e){
+                        System.out.println("Error, comprueba el operador y el valor que esten correctamente: "+e);
+                    }
+                    break;
+
+                case 2:
+                    try {
+                    // Obtener los registros a eliminar
+                    Query queryMapas = em.createQuery("SELECT a FROM Mapas a WHERE a." + columna + " " + operador + " :valor");
+                    queryMapas.setParameter("valor", valor);
+                    List<Mapas> mapasAEliminar = queryMapas.getResultList();
+
+                    // Eliminar los registros
+                    em.getTransaction().begin();
+                    for (Mapas mapas : mapasAEliminar) {
+                        em.remove(mapas);
+                    }
+                    em.flush();
+                    em.getTransaction().commit();
+                    System.out.println("Se ha eliminado correctamente");
+                    System.out.println("\nTabla: Mapas");
+                    mapasController.listArticles();
+                    Thread.sleep(1000);
+                    }catch (Exception e){
+                        System.out.println("Error, comprueba el operador y el valor que esten correctamente: "+e);
+                    }
+                    break;
+
+                case 3:
+                    try {
+                    // Obtener los registros a eliminar
+                    Query queryArmas = em.createQuery("SELECT a FROM Armas a WHERE a." + columna + " " + operador + " :valor");
+                    queryArmas.setParameter("valor", valor);
+                    List<Armas> armasAEliminar = queryArmas.getResultList();
+
+                    // Eliminar los registros
+                    em.getTransaction().begin();
+                    for (Armas armas : armasAEliminar) {
+                        em.remove(armas);
+                    }
+                    em.flush();
+                    em.getTransaction().commit();
+                    System.out.println("Se ha eliminado correctamente");
+                    System.out.println("\nTabla: Armas");
+                    armasController.listArticles();
+                    Thread.sleep(1000);
+                    }catch (Exception e){
+                        System.out.println("Error, comprueba el operador y el valor que esten correctamente: "+e);
+                    }
+                    break;
+
+                case 4:
+                    try {
+                    // Obtener los registros a eliminar
+                    Query queryPartidas = em.createQuery("SELECT a FROM Partidas a WHERE a." + columna + " " + operador + " :valor");
+                    queryPartidas.setParameter("valor", valor);
+                    List<Partidas> partidasAEliminar = queryPartidas.getResultList();
+
+                    // Eliminar los registros
+                    em.getTransaction().begin();
+                    for (Partidas partidas : partidasAEliminar) {
+                        em.remove(partidas);
+                    }
+                    em.flush();
+                    em.getTransaction().commit();
+                    System.out.println("Se ha eliminado correctamente");
+                    System.out.println("\nTabla: Partidas");
+                    partidasController.listArticles();
+                    Thread.sleep(1000);
+                    }catch (Exception e){
+                        System.out.println("Error, comprueba el operador y el valor que esten correctamente: "+e);
+                    }
+                    break;
+
+        }
 
     }
 

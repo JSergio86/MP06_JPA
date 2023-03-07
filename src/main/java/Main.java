@@ -42,7 +42,7 @@ public class Main {
     return emf;
   }
 
-  public static void main(String[] args) throws IOException {
+  public static void main(String[] args) throws IOException, InterruptedException {
     ConnectionFactory connectionFactory = ConnectionFactory.getInstance();
     Connection c = connectionFactory.connect();
 
@@ -89,6 +89,19 @@ public class Main {
           } catch (InterruptedException e) {
             throw new RuntimeException(e);
           }
+          break;
+
+
+        case 8:
+          databaseController.modificarRegistro();
+          break;
+
+        case 9:
+          databaseController.eliminarRegistro();
+          break;
+
+        case 10:
+          databaseController.eliminarConjunto();
           break;
 
 

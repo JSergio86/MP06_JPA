@@ -64,7 +64,7 @@ public class PartidasController {
       type = str.nextToken();
       result = str.nextToken();
 
-      partidaList.add(new Partidas(idpartida, idjugador, idmapa, type, result));
+      partidaList.add(new Partidas(idpartida,idmapa , idjugador, type, result));
 
     }
     br.close();
