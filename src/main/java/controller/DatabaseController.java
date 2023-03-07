@@ -130,65 +130,92 @@ public class DatabaseController {
         System.out.println("Elige la tabla que desea eliminar un conjunto de registros. 1.Jugadores, 2.Mapas, 3.Armas, 4.Partidas");
         int opcion = sc.nextInt();
 
-        switch (opcion){
+        switch (opcion) {
             case 1:
                 EntityManager em = entityManagerFactory.createEntityManager();
                 System.out.println("¿Que idjugador quieres modificar?");
                 int id = sc.nextInt();
 
-                System.out.println("Escribe la columna que quiere modificar");
-                String columna = sc.nextLine();
-
-                System.out.println("Escribe el nuevo valor");
-                String valor = sc.nextLine();
-
-                // Modificar un registro concreto
                 Jugadores jugador = em.find(Jugadores.class, id);
 
-                if(columna.equals("rank")){
                     if (jugador != null) {
-                        jugador.setRank(valor);
-                        em.getTransaction().begin();
-                        em.flush();
-                        em.getTransaction().commit();
-                    }
-                }
+                        System.out.println("Escribe la columna que quiere modificar");
+                        String columna = sc.nextLine();
 
-                else if(columna.equals("wins")){
-                    if (jugador != null) {
-                        jugador.setWins(Integer.parseInt(valor));
-                        em.getTransaction().begin();
-                        em.flush();
-                        em.getTransaction().commit();
-                    }
-                }
+                        switch (columna){
+                            case "wins":
+                                System.out.println("Escribe el nuevo valor");
+                                String valor = sc.nextLine();
+                                jugador.setWins(Integer.parseInt(valor));
+                                break;
 
-                else if(columna.equals("kills")){
-                    if (jugador != null) {
-                        jugador.setKills(Integer.parseInt(valor));
-                        em.getTransaction().begin();
-                        em.flush();
-                        em.getTransaction().commit();
-                    }
-                }
+                            case "rank":
+                                System.out.println("Escribe el nuevo valor");
+                                String nuevoRank = sc.nextLine();
+                                jugador.setRank(nuevoRank);
+                                break;
+                            case "kills":
+                                System.out.println("Escribe el nuevo valor");
+                                int nuevoKills = Integer.parseInt(sc.nextLine());
+                                jugador.setKills(nuevoKills);
+                                break;
+                            case "deaths":
+                                System.out.println("Escribe el nuevo valor");
+                                int nuevoDeaths = Integer.parseInt(sc.nextLine());
+                                jugador.setDeaths(nuevoDeaths);
+                                break;
+                            case "assists":
+                                System.out.println("Escribe el nuevo valor");
+                                int nuevoAssists = Integer.parseInt(sc.nextLine());
+                                jugador.setAssists(nuevoAssists);
+                                break;
+                            case "scoreround":
+                                System.out.println("Escribe el nuevo valor");
+                                float nuevoScoreRound = Float.parseFloat(sc.nextLine());
+                                jugador.setScoreround(nuevoScoreRound);
+                                break;
+                            case "kad":
+                                System.out.println("Escribe el nuevo valor");
+                                float nuevoKad = Float.parseFloat(sc.nextLine());
+                                jugador.setKad(nuevoKad);
+                                break;
+                            case "killsround":
+                                System.out.println("Escribe el nuevo valor");
+                                float nuevoKillsRound = Float.parseFloat(sc.nextLine());
+                                jugador.setKillsround(nuevoKillsRound);
+                                break;
+                            case "plants":
+                                System.out.println("Escribe el nuevo valor");
+                                int nuevoPlants = Integer.parseInt(sc.nextLine());
+                                jugador.setPlants(nuevoPlants);
+                                break;
+                            case "firstbloods":
+                                System.out.println("Escribe el nuevo valor");
+                                int nuevoFirstbloods = Integer.parseInt(sc.nextLine());
+                                jugador.setFirstbloods(nuevoFirstbloods);
+                                break;
+                            case "clutches":
+                                System.out.println("Escribe el nuevo valor");
+                                int nuevoClutches = Integer.parseInt(sc.nextLine());
+                                jugador.setClutches(nuevoClutches);
+                                break;
+                            case "flawless":
+                                System.out.println("Escribe el nuevo valor");
+                                int nuevoFlawless = Integer.parseInt(sc.nextLine());
+                                jugador.setFlawless(nuevoFlawless);
+                                break;
+                            case "aces":
+                                System.out.println("Escribe el nuevo valor");
+                                int nuevoAces = Integer.parseInt(sc.nextLine());
+                                jugador.setAces(nuevoAces);
+                                break;
 
-                else if(columna.equals("deaths")){
-                    if (jugador != null) {
-                        jugador.setDeaths(Integer.parseInt(valor));
+                        }
                         em.getTransaction().begin();
                         em.flush();
                         em.getTransaction().commit();
                     }
-                }
 
-                else if(columna.equals("assists")){
-                    if (jugador != null) {
-                        jugador.setAssists(Integer.parseInt(valor));
-                        em.getTransaction().begin();
-                        em.flush();
-                        em.getTransaction().commit();
-                    }
-                }
 
 
                 em.close();
