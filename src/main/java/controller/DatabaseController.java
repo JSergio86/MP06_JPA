@@ -56,7 +56,7 @@ public class DatabaseController {
     }
 
     public void insertarDatos() throws IOException {
-        try {
+
             List<Partidas> partidas = partidasController.readArticlesFile("src/main/resources/Partidas.csv");
             List<Jugadores> jugadores = jugadoresController.readArticlesFile("src/main/resources/Jugador.csv");
             List<Armas> armas = armasController.readArticlesFile("src/main/resources/Armas.csv");
@@ -79,9 +79,6 @@ public class DatabaseController {
             }
             System.out.println("Se han insertado correctamente");
 
-        }catch (Exception e) {
-            System.out.println("Comprueba que esten creadas las tablas: " + e.getMessage());
-        }
     }
 
     public void listarUnaTabla(){
@@ -126,145 +123,63 @@ public class DatabaseController {
         partidasController.listArticles();
     }
 
+    public void buscarJugadorPorRank(){
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Rango del jugador que quieres buscar");
+        String rango = sc.next();
+        List<Jugadores> jugadoresList= jugadoresController.seleccionarJugadoresPorRank(rango);
+        for (Jugadores jugador : jugadoresList) {
+            System.out.println(jugador.toString());
+        }
+
+        buscarJugadorPorWinsMayorQue();
+
+        buscarJugadorPorId();
+
+    }
+    public void buscarJugadorPorWinsMayorQue(){
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Wins mayor que: ");
+        int wins = sc.nextInt();
+        List<Jugadores> jugadoresList= jugadoresController.seleccionarJugadoresPorWinsMayorQue(wins);
+        for (Jugadores jugador : jugadoresList) {
+            System.out.println(jugador.toString());
+        }
+
+    }
+    public void buscarJugadorPorId(){
+        Scanner sc = new Scanner(System.in);
+        System.out.println("ID del jugador que quieres buscar");
+        int id = sc.nextInt();
+        Jugadores jugadoresList= jugadoresController.seleccionarJugadorPorId(id);
+        System.out.println(jugadoresList.toString());
+
+
+    }
+
+
+
     public void modificarRegistro(){
         System.out.println("Elige la tabla que desea eliminar un conjunto de registros. 1.Jugadores, 2.Mapas, 3.Armas, 4.Partidas");
         int opcion = sc.nextInt();
 
         switch (opcion) {
             case 1:
-                EntityManager em = entityManagerFactory.createEntityManager();
-                System.out.println("¿Que idjugador quieres modificar?");
-                int id = sc.nextInt();
-
-                Jugadores jugador = em.find(Jugadores.class, id);
-
-                    if (jugador != null) {
-                        System.out.println("Escribe la columna que quiere modificar");
-                        String columna = sc.nextLine();
-
-                        switch (columna){
-                            case "wins":
-                                System.out.println("Escribe el nuevo valor");
-                                String valor = sc.nextLine();
-                                jugador.setWins(Integer.parseInt(valor));
-                                break;
-
-                            case "rank":
-                                System.out.println("Escribe el nuevo valor");
-                                String nuevoRank = sc.nextLine();
-                                jugador.setRank(nuevoRank);
-                                break;
-                            case "kills":
-                                System.out.println("Escribe el nuevo valor");
-                                int nuevoKills = Integer.parseInt(sc.nextLine());
-                                jugador.setKills(nuevoKills);
-                                break;
-                            case "deaths":
-                                System.out.println("Escribe el nuevo valor");
-                                int nuevoDeaths = Integer.parseInt(sc.nextLine());
-                                jugador.setDeaths(nuevoDeaths);
-                                break;
-                            case "assists":
-                                System.out.println("Escribe el nuevo valor");
-                                int nuevoAssists = Integer.parseInt(sc.nextLine());
-                                jugador.setAssists(nuevoAssists);
-                                break;
-                            case "scoreround":
-                                System.out.println("Escribe el nuevo valor");
-                                float nuevoScoreRound = Float.parseFloat(sc.nextLine());
-                                jugador.setScoreround(nuevoScoreRound);
-                                break;
-                            case "kad":
-                                System.out.println("Escribe el nuevo valor");
-                                float nuevoKad = Float.parseFloat(sc.nextLine());
-                                jugador.setKad(nuevoKad);
-                                break;
-                            case "killsround":
-                                System.out.println("Escribe el nuevo valor");
-                                float nuevoKillsRound = Float.parseFloat(sc.nextLine());
-                                jugador.setKillsround(nuevoKillsRound);
-                                break;
-                            case "plants":
-                                System.out.println("Escribe el nuevo valor");
-                                int nuevoPlants = Integer.parseInt(sc.nextLine());
-                                jugador.setPlants(nuevoPlants);
-                                break;
-                            case "firstbloods":
-                                System.out.println("Escribe el nuevo valor");
-                                int nuevoFirstbloods = Integer.parseInt(sc.nextLine());
-                                jugador.setFirstbloods(nuevoFirstbloods);
-                                break;
-                            case "clutches":
-                                System.out.println("Escribe el nuevo valor");
-                                int nuevoClutches = Integer.parseInt(sc.nextLine());
-                                jugador.setClutches(nuevoClutches);
-                                break;
-                            case "flawless":
-                                System.out.println("Escribe el nuevo valor");
-                                int nuevoFlawless = Integer.parseInt(sc.nextLine());
-                                jugador.setFlawless(nuevoFlawless);
-                                break;
-                            case "aces":
-                                System.out.println("Escribe el nuevo valor");
-                                int nuevoAces = Integer.parseInt(sc.nextLine());
-                                jugador.setAces(nuevoAces);
-                                break;
-
-                        }
-                        em.getTransaction().begin();
-                        em.flush();
-                        em.getTransaction().commit();
-                    }
-
-
-
-                em.close();
+                jugadoresController.modificarRegistro();
                 break;
+
+            case 2:
+                mapasController.modificarRegistro();
+                break;
+
             case 3:
-                EntityManager emArma = entityManagerFactory.createEntityManager();
-                System.out.println("¿Que idarma quieres modificar?");
-                int idarma = sc.nextInt();
+                armasController.modificarRegistro();
+                break;
 
-                System.out.println("Escribe el nuevo nombre del arma");
-                String nombre = sc.nextLine();
-
-                System.out.println("Escribe el nuevo tipo del arma");
-                String tipo = sc.nextLine();
-
-                // Modificar un registro concreto
-                Armas arma = emArma.find(Armas.class, idarma);
-                if (arma != null) {
-                    arma.setName(nombre);
-                    arma.setType(tipo);
-                    emArma.getTransaction().begin();
-                    emArma.flush();
-                    emArma.getTransaction().commit();
-                }
-
-                emArma.close();
+            case 4:
+                partidasController.modificarRegistro();
                 break;
         }
-        EntityManager em = entityManagerFactory.createEntityManager();
-        System.out.println("¿Que idarma quieres modificar?");
-        int idarma = sc.nextInt();
-
-        System.out.println("Escribe el nuevo nombre del arma");
-        String nombre = sc.nextLine();
-
-        System.out.println("Escribe el nuevo tipo del arma");
-        String tipo = sc.nextLine();
-
-        // Modificar un registro concreto
-        Armas arma = em.find(Armas.class, idarma);
-        if (arma != null) {
-            arma.setName(nombre);
-            arma.setType(tipo);
-            em.getTransaction().begin();
-            em.flush();
-            em.getTransaction().commit();
-        }
-
-        em.close();
 
     }
 
@@ -276,59 +191,19 @@ public class DatabaseController {
 
             switch (tabla){
                 case 1:
-                    System.out.println("¿Que idjugador quieres eliminar?");
-                    int idjugador = sc.nextInt();
-
-                    // Eliminar un registro concreto
-                    Jugadores jugadorAEliminar = em.find(Jugadores.class, idjugador);
-                    if (jugadorAEliminar != null) {
-                        em.getTransaction().begin();
-                        em.remove(jugadorAEliminar);
-                        em.flush();
-                        em.getTransaction().commit();
-                    }
+                    jugadoresController.eliminarRegistro();
                     break;
 
                 case 2:
-                    System.out.println("¿Que idmapa quieres eliminar?");
-                    int idmapa = sc.nextInt();
-
-                    // Eliminar un registro concreto
-                    Mapas mapaAEliminar = em.find(Mapas.class, idmapa);
-                    if (mapaAEliminar != null) {
-                        em.getTransaction().begin();
-                        em.remove(mapaAEliminar);
-                        em.flush();
-                        em.getTransaction().commit();
-                    }
+                    mapasController.eliminarRegistro();
                     break;
 
                 case 3:
-                    System.out.println("¿Que idarma quieres eliminar?");
-                    int idarma = sc.nextInt();
-
-                    // Eliminar un registro concreto
-                    Armas armaAEliminar = em.find(Armas.class, idarma);
-                    if (armaAEliminar != null) {
-                        em.getTransaction().begin();
-                        em.remove(armaAEliminar);
-                        em.flush();
-                        em.getTransaction().commit();
-                    }
+                    armasController.eliminarRegistro();
                     break;
 
                 case 4:
-                    System.out.println("¿Que idpartida quieres eliminar?");
-                    int idpartida = sc.nextInt();
-
-                    // Eliminar un registro concreto
-                    Partidas partidaAEliminar = em.find(Partidas.class, idpartida);
-                    if (partidaAEliminar != null) {
-                        em.getTransaction().begin();
-                        em.remove(partidaAEliminar);
-                        em.flush();
-                        em.getTransaction().commit();
-                    }
+                    partidasController.eliminarRegistro();
                     break;
             }
 

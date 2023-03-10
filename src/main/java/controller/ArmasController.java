@@ -1,6 +1,7 @@
 package controller;
 
 import model.Armas;
+import model.Jugadores;
 import model.Partidas;
 
 import javax.persistence.EntityManager;
@@ -12,12 +13,14 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.StringTokenizer;
 
 public class ArmasController {
     private Connection connection;
     private EntityManagerFactory entityManagerFactory;
 
+    private JugadoresController jugadoresController = new JugadoresController(connection);
 
     public ArmasController(Connection connection) {
         this.connection = connection;
@@ -53,14 +56,17 @@ public class ArmasController {
         BufferedReader br = new BufferedReader(new FileReader(armasFile));
         String linea = "";
         List<Armas> armasList = new ArrayList<>();
+        List<Jugadores> jugadoresList = jugadoresController.readArticlesFile("src/main/resources/Jugador.csv");
+
 
         while ((linea = br.readLine()) != null) {
             StringTokenizer str = new StringTokenizer(linea, ",");
             idarma = Integer.parseInt(str.nextToken());
+            int idjugador = Integer.parseInt(str.nextToken());
             name = str.nextToken();
             type = str.nextToken();
 
-            armasList.add(new Armas(idarma, name, type));
+            armasList.add(new Armas(idarma,jugadoresList.get(idjugador - 1), name, type));
 
         }
         br.close();
@@ -90,26 +96,72 @@ public class ArmasController {
         em.close();
     }
 
-    /* Method to UPDATE activity for an Article */
-    public void updateArticle(Integer articleId) {
+    public void modificarRegistro() {
+        Scanner sc = new Scanner(System.in);
         EntityManager em = entityManagerFactory.createEntityManager();
-        em.getTransaction().begin();
-        Partidas article = (Partidas) em.find(Partidas.class, articleId);
-        em.merge(article);
-        em.getTransaction().commit();
+        listArticles();
+        System.out.println("\n¿Que idarma quieres modificar?");
+        int id = sc.nextInt();
+
+        Armas arma = em.find(Armas.class, id);
+
+        if (arma != null) {
+            System.out.println("Escribe la columna que quiere modificar");
+            String columna = sc.next();
+
+            sc.nextLine();
+
+            System.out.println("Escribe el nuevo valor");
+            String valor = sc.nextLine();
+
+            switch (columna){
+                case "name":
+                    arma.setName(valor);
+                    break;
+
+                case "type":
+                    arma.setType(valor);
+                    break;
+            }
+
+            em.getTransaction().begin();
+            em.flush();
+            em.getTransaction().commit();
+        }
+
+        listArticles();
+        try {
+            Thread.sleep(1500);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
         em.close();
     }
 
-    /* Method to DELETE an Article from the records */
-    public void deleteArticle(Integer articleId) {
+    public void eliminarRegistro() {
         EntityManager em = entityManagerFactory.createEntityManager();
-        em.getTransaction().begin();
-        Partidas article = (Partidas) em.find(Partidas.class, articleId);
-        em.remove(article);
-        em.getTransaction().commit();
-        em.close();
-    }
+        Scanner sc = new Scanner(System.in);
+        listArticles();
+        System.out.println("\n¿Que idjugador quieres eliminar?");
+        int idarma = sc.nextInt();
 
+        // Eliminar un registro concreto
+        Armas armaAEliminar = em.find(Armas.class, idarma);
+        if (armaAEliminar != null) {
+            em.getTransaction().begin();
+            em.remove(armaAEliminar);
+            em.flush();
+            em.getTransaction().commit();
+        }
+
+        listArticles();
+        try {
+            Thread.sleep(1500);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
     public void deleteTable(){
         EntityManager em = entityManagerFactory.createEntityManager();
         em.getTransaction().begin();

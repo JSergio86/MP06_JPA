@@ -38,6 +38,8 @@ FOREIGN KEY (idJugador) REFERENCES Jugadores(idJugador) ON DELETE CASCADE
 
 CREATE TABLE Armas (
 idArma INT PRIMARY KEY,
+idJugador INT,
 name TEXT,
-type TEXT
+type TEXT,
+FOREIGN KEY (idJugador) REFERENCES Jugadores(idJugador) ON DELETE CASCADE
 );

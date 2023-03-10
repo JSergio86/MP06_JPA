@@ -1,5 +1,6 @@
 package controller;
 
+import model.Armas;
 import model.Mapas;
 import model.Partidas;
 
@@ -12,6 +13,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.StringTokenizer;
 
 public class MapasController {
@@ -103,23 +105,98 @@ public class MapasController {
   }
 
   /* Method to UPDATE activity for an Article */
-  public void updateArticle(Integer articleId) {
+  public void modificarRegistro() {
+    Scanner sc = new Scanner(System.in);
     EntityManager em = entityManagerFactory.createEntityManager();
-    em.getTransaction().begin();
-    Mapas article = (Mapas) em.find(Mapas.class, articleId);
-    em.merge(article);
-    em.getTransaction().commit();
+    listArticles();
+    System.out.println("\n¿Qué idmapa quieres modificar?");
+    int id = sc.nextInt();
+
+    Mapas mapa = em.find(Mapas.class, id);
+
+    if (mapa != null) {
+      System.out.println("Escribe la columna que quieres modificar:");
+      String columna = sc.next();
+
+      sc.nextLine();
+
+      System.out.println("Escribe el nuevo valor:");
+      String valor = sc.nextLine();
+
+      switch (columna) {
+        case "name":
+          mapa.setName(valor);
+          break;
+
+        case "porcentaje_win":
+          mapa.setPorcentaje_win(valor);
+          break;
+
+        case "wins":
+          mapa.setWins(Integer.parseInt(valor));
+          break;
+
+        case "losses":
+          mapa.setLosses(Integer.parseInt(valor));
+          break;
+
+        case "kd":
+          mapa.setKd(Float.parseFloat(valor));
+          break;
+
+        case "adr":
+          mapa.setAdr(Float.parseFloat(valor));
+          break;
+
+        case "acs":
+          mapa.setAcs(Float.parseFloat(valor));
+          break;
+
+        default:
+          System.out.println("La columna no es válida.");
+          em.close();
+          return;
+      }
+
+      em.getTransaction().begin();
+      em.flush();
+      em.getTransaction().commit();
+      System.out.println("El registro ha sido modificado correctamente.");
+      listArticles();
+      try {
+        Thread.sleep(1500);
+      } catch (InterruptedException e) {
+        throw new RuntimeException(e);
+      }
+    } else {
+      System.out.println("No se encontró el mapa con id " + id);
+    }
+
     em.close();
   }
 
   /* Method to DELETE an Article from the records */
-  public void deleteArticle(Integer articleId) {
+  public void eliminarRegistro() {
     EntityManager em = entityManagerFactory.createEntityManager();
-    em.getTransaction().begin();
-    Mapas article = (Mapas) em.find(Mapas.class, articleId);
-    em.remove(article);
-    em.getTransaction().commit();
-    em.close();
+    Scanner sc = new Scanner(System.in);
+    listArticles();
+    System.out.println("\n¿Que idmapa quieres eliminar?");
+    int idmapa = sc.nextInt();
+
+    // Eliminar un registro concreto
+    Mapas mapaAEliminar = em.find(Mapas.class, idmapa);
+    if (mapaAEliminar != null) {
+      em.getTransaction().begin();
+      em.remove(mapaAEliminar);
+      em.flush();
+      em.getTransaction().commit();
+    }
+    listArticles();
+    try {
+      Thread.sleep(1500);
+    } catch (InterruptedException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   public void deleteTable(){

@@ -1,5 +1,6 @@
 package controller;
 
+import model.Armas;
 import model.Partidas;
 
 import javax.persistence.EntityManager;
@@ -96,23 +97,72 @@ public class PartidasController {
   }
 
   /* Method to UPDATE activity for an Article */
-  public void updateArticle(Integer articleId) {
+  public void modificarRegistro() {
+    Scanner sc = new Scanner(System.in);
     EntityManager em = entityManagerFactory.createEntityManager();
-    em.getTransaction().begin();
-    Partidas article = (Partidas) em.find(Partidas.class, articleId);
-    em.merge(article);
-    em.getTransaction().commit();
+    listArticles();
+    System.out.println("\n¿Qué idpartida quieres modificar?");
+    int idpartida = sc.nextInt();
+
+    Partidas partida = em.find(Partidas.class, idpartida);
+
+    if (partida != null) {
+      System.out.println("Escribe la columna que quiere modificar");
+      String columna = sc.next();
+
+      sc.nextLine();
+
+      System.out.println("Escribe el nuevo valor");
+      String valor = sc.nextLine();
+
+      switch (columna) {
+        case "type":
+          partida.setType(valor);
+          break;
+        case "result":
+          partida.setResult(valor);
+          break;
+        default:
+          System.out.println("Columna no válida");
+          return;
+      }
+
+      em.getTransaction().begin();
+      em.flush();
+      em.getTransaction().commit();
+    }
+    listArticles();
+    try {
+      Thread.sleep(1500);
+    } catch (InterruptedException e) {
+      throw new RuntimeException(e);
+    }
     em.close();
   }
 
   /* Method to DELETE an Article from the records */
-  public void deleteArticle(Integer articleId) {
+  public void eliminarRegistro() {
     EntityManager em = entityManagerFactory.createEntityManager();
-    em.getTransaction().begin();
-    Partidas article = (Partidas) em.find(Partidas.class, articleId);
-    em.remove(article);
-    em.getTransaction().commit();
-    em.close();
+    Scanner sc = new Scanner(System.in);
+    listArticles();
+    System.out.println("\n¿Que idpartida quieres eliminar?");
+    int idpartida = sc.nextInt();
+
+    // Eliminar un registro concreto
+    Partidas partidaAEliminar = em.find(Partidas.class, idpartida);
+    if (partidaAEliminar != null) {
+      em.getTransaction().begin();
+      em.remove(partidaAEliminar);
+      em.flush();
+      em.getTransaction().commit();
+    }
+
+    listArticles();
+    try {
+      Thread.sleep(1500);
+    } catch (InterruptedException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   public void deleteTable(){

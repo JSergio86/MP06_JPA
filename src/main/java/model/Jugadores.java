@@ -1,5 +1,7 @@
 package model;
 
+import controller.ArmasController;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -51,6 +53,7 @@ public class Jugadores implements Serializable {
 
   @Column(name = "aces")
   int aces;
+
 
   public Jugadores(int idjugador, String rank, int wins, int kills, int deaths, int assists, float scoreround, float kad, float killsround, int plants, int firstbloods, int clutches, int flawless, int aces) {
     super();

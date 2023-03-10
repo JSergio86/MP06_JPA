@@ -1,8 +1,11 @@
 import java.io.IOException;
 import java.sql.Connection;
+import java.util.List;
 
 import controller.*;
 import database.ConnectionFactory;
+import model.Jugadores;
+import model.Mapas;
 import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.Metadata;
@@ -90,7 +93,9 @@ public class Main {
             throw new RuntimeException(e);
           }
           break;
-
+        case 6:
+          databaseController.buscarJugadorPorRank();
+          break;
 
         case 8:
           databaseController.modificarRegistro();

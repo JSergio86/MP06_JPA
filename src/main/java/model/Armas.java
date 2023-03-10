@@ -9,16 +9,29 @@ public class Armas implements Serializable {
     @Id
     @Column(name = "idarma")
     int idarma;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "idjugador")
+    Jugadores jugador;
     @Column(name = "name")
     String name;
     @Column(name = "type")
     String type;
 
-    public Armas(int idarma, String name, String type) {
+    public Armas(int idarma,Jugadores jugador, String name, String type) {
         super();
         this.idarma = idarma;
         this.name = name;
         this.type = type;
+        this.jugador = jugador;
+    }
+
+    public Jugadores getJugador() {
+        return jugador;
+    }
+
+    public void setJugador(Jugadores jugador) {
+        this.jugador = jugador;
     }
 
     public Armas() {
@@ -53,6 +66,7 @@ public class Armas implements Serializable {
     public String toString() {
         return "Armas{" +
                 "idarma=" + idarma +
+                ", jugador=" + jugador +
                 ", name='" + name + '\'' +
                 ", type='" + type + '\'' +
                 '}';

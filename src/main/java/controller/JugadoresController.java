@@ -6,12 +6,14 @@ import model.Partidas;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.StringTokenizer;
 
 public class JugadoresController {
@@ -113,24 +115,131 @@ public class JugadoresController {
         em.close();
     }
 
-    /* Method to UPDATE activity for an Article */
-    public void updateArticle(Integer articleId) {
+    public List<Jugadores> seleccionarJugadoresPorRank(String rank) {
         EntityManager em = entityManagerFactory.createEntityManager();
-        em.getTransaction().begin();
-        Partidas article = (Partidas) em.find(Partidas.class, articleId);
-        em.merge(article);
-        em.getTransaction().commit();
+        TypedQuery<Jugadores> query = em.createQuery("SELECT j FROM Jugadores j WHERE j.rank LIKE :rank", Jugadores.class);
+        query.setParameter("rank", "%" + rank + "%");
+        return query.getResultList();
+    }
+    public List<Jugadores> seleccionarJugadoresPorWinsMayorQue(int wins) {
+        EntityManager em = entityManagerFactory.createEntityManager();
+        TypedQuery<Jugadores> query = em.createQuery("SELECT j FROM Jugadores j WHERE j.wins > :wins", Jugadores.class);
+        query.setParameter("wins", wins);
+        return query.getResultList();
+    }
+    public Jugadores seleccionarJugadorPorId(int id) {
+        EntityManager em = entityManagerFactory.createEntityManager();
+        return em.find(Jugadores.class, id);
+    }
+
+    /* Method to UPDATE activity for an Article */
+    public void modificarRegistro() {
+        Scanner sc = new Scanner(System.in);
+        EntityManager em = entityManagerFactory.createEntityManager();
+        listArticles();
+        System.out.println("\n¿Que idjugador quieres modificar?");
+        int id = sc.nextInt();
+
+        Jugadores jugador = em.find(Jugadores.class, id);
+
+        if (jugador != null) {
+            System.out.println("Escribe la columna que quiere modificar");
+            String columna = sc.next();
+
+            sc.nextLine();
+
+            System.out.println("Escribe el nuevo valor");
+            String valor = sc.nextLine();
+
+            switch (columna){
+                case "wins":
+                    jugador.setWins(Integer.parseInt(valor));
+                    break;
+
+                case "rank":
+                    jugador.setRank(valor);
+                    break;
+
+                case "kills":
+                    jugador.setKills(Integer.parseInt(valor));
+                    break;
+
+                case "deaths":
+                    jugador.setDeaths(Integer.parseInt(valor));
+                    break;
+
+                case "assists":
+                    jugador.setAssists(Integer.parseInt(valor));
+                    break;
+
+                case "scoreround":
+                    jugador.setScoreround(Float.parseFloat(valor));
+                    break;
+
+                case "kad":
+                    jugador.setKad(Float.parseFloat(valor));
+                    break;
+
+                case "killsround":
+                    jugador.setKillsround(Float.parseFloat(valor));
+                    break;
+
+                case "plants":
+                    jugador.setPlants(Integer.parseInt(valor));
+                    break;
+
+                case "firstbloods":
+                    jugador.setFirstbloods(Integer.parseInt(valor));
+                    break;
+
+                case "clutches":
+                    jugador.setClutches(Integer.parseInt(valor));
+                    break;
+
+                case "flawless":
+                    jugador.setFlawless(Integer.parseInt(valor));
+                    break;
+
+                case "aces":
+                    jugador.setAces(Integer.parseInt(valor));
+                    break;
+
+            }
+            em.getTransaction().begin();
+            em.flush();
+            em.getTransaction().commit();
+        }
+        listArticles();
+        try {
+            Thread.sleep(1500);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         em.close();
     }
 
     /* Method to DELETE an Article from the records */
-    public void deleteArticle(Integer articleId) {
+    public void eliminarRegistro() {
         EntityManager em = entityManagerFactory.createEntityManager();
-        em.getTransaction().begin();
-        Partidas article = (Partidas) em.find(Partidas.class, articleId);
-        em.remove(article);
-        em.getTransaction().commit();
-        em.close();
+        Scanner sc = new Scanner(System.in);
+        listArticles();
+        System.out.println("\n¿Que idjugador quieres eliminar?");
+        int idjugador = sc.nextInt();
+
+        // Eliminar un registro concreto
+        Jugadores jugadorAEliminar = em.find(Jugadores.class, idjugador);
+        if (jugadorAEliminar != null) {
+            em.getTransaction().begin();
+            em.remove(jugadorAEliminar);
+            em.flush();
+            em.getTransaction().commit();
+        }
+        listArticles();
+        try {
+            Thread.sleep(1500);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void deleteTable(){

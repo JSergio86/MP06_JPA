@@ -6,7 +6,6 @@ import java.io.Serializable;
 @Access(AccessType.FIELD)
 @Table(name = "mapas")
 public class Mapas implements Serializable {
-    //Author
     @Id
     @Column(name = "idmapa")
     int idmapa;
