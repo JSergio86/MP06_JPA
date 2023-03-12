@@ -55,6 +55,9 @@ public class DatabaseController {
         }
     }
 
+    /**
+     * Método que permite insertar en las tablas a partir de los archivos csv.
+     */
     public void insertarDatos() throws IOException {
 
             List<Partidas> partidas = partidasController.readArticlesFile("src/main/resources/Partidas.csv");
@@ -80,6 +83,10 @@ public class DatabaseController {
             System.out.println("Se han insertado correctamente");
 
     }
+
+    /**
+     * Este método lee la entrada del usuario para determinar qué tabla debe listarse y luego llama al método correspondiente del controlador correspondiente para listar los registros de esa tabla.
+     */
 
     public void listarUnaTabla(){
         Scanner sc = new Scanner(System.in);
@@ -107,6 +114,10 @@ public class DatabaseController {
 
     }
 
+    /**
+     * Este método simplemente llama al método listArticles() de cada uno de los controladores para listar todos los registros de todas las tablas.
+     */
+
     public void listarTablas(){
         System.out.println("Tabla: Armas");
         armasController.listArticles();
@@ -123,41 +134,94 @@ public class DatabaseController {
         partidasController.listArticles();
     }
 
-    public void buscarJugadorPorRank(){
+    /**
+     * Este método lee la entrada del usuario para determinar qué tabla y qué tipo de consulta se debe realizar, y luego llama al método correspondiente del controlador para realizar la consulta y mostrar los resultados.
+     */
+
+    public void consultasTablas() {
         Scanner sc = new Scanner(System.in);
-        System.out.println("Rango del jugador que quieres buscar");
-        String rango = sc.next();
-        List<Jugadores> jugadoresList= jugadoresController.seleccionarJugadoresPorRank(rango);
-        for (Jugadores jugador : jugadoresList) {
-            System.out.println(jugador.toString());
+        System.out.println("¿En que tabla quieres consultar los registros?. 1.Jugadores, 2.Mapas, 3.Armas, 4.Partidas");
+        int opcion = sc.nextInt();
+
+        switch (opcion){
+            case 1:
+                System.out.println("Elige una opción para buscar en la tabla jugadores. 1.Por su rango, 2.Por sus wins mayor que, 3.Por su ID");
+                int opcionJugadores = sc.nextInt();
+
+                switch (opcionJugadores){
+                    case 1:
+                        jugadoresController.buscarJugadorPorRank();
+                        break;
+                    case 2:
+                        jugadoresController.buscarJugadorPorWinsMayorQue();
+                        break;
+                    case 3:
+                        jugadoresController.buscarJugadorPorId();
+                        break;
+                }
+                break;
+
+            case 2:
+                System.out.println("Elige una opción para buscar en la tabla jugadores. 1.Por su nombre, 2.Por sus wins mayor que, 3.Por su ID");
+                int opcionMapas = sc.nextInt();
+
+                switch (opcionMapas){
+                    case 1:
+                        mapasController.buscarMapasPorNombre();
+                        break;
+                    case 2:
+                        mapasController.buscarPorWinsMayorQue();
+                        break;
+                    case 3:
+                        mapasController.buscarPorId();
+                        break;
+                }
+                break;
+
+            case 3:
+                System.out.println("Elige una opción para buscar en la tabla armas. 1.Por su tipo, 2.Por sus ID mayor que, 3.Por su ID");
+                int opcionArmas = sc.nextInt();
+
+                switch (opcionArmas){
+                    case 1:
+                        armasController.buscarArmasPorTipo();
+                        break;
+                    case 2:
+                        armasController.buscarPorIDMayorQue();
+                        break;
+                    case 3:
+                        armasController.buscarPorId();
+                        break;
+                }
+
+                break;
+
+            case 4:
+                System.out.println("Elige una opción para buscar en la tabla armas. 1.Por su tipo, 2.Por sus ID mayor que, 3.Por su ID");
+                int opcionPartidas = sc.nextInt();
+
+                switch (opcionPartidas){
+                    case 1:
+                        partidasController.buscarPorTipo();
+                        break;
+                    case 2:
+                        partidasController.buscarPorIDMayorQue();
+                        break;
+                    case 3:
+                        partidasController.buscarPorId();
+                        break;
+                }
+
+                break;
         }
 
-        buscarJugadorPorWinsMayorQue();
-
-        buscarJugadorPorId();
-
-    }
-    public void buscarJugadorPorWinsMayorQue(){
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Wins mayor que: ");
-        int wins = sc.nextInt();
-        List<Jugadores> jugadoresList= jugadoresController.seleccionarJugadoresPorWinsMayorQue(wins);
-        for (Jugadores jugador : jugadoresList) {
-            System.out.println(jugador.toString());
-        }
-
-    }
-    public void buscarJugadorPorId(){
-        Scanner sc = new Scanner(System.in);
-        System.out.println("ID del jugador que quieres buscar");
-        int id = sc.nextInt();
-        Jugadores jugadoresList= jugadoresController.seleccionarJugadorPorId(id);
-        System.out.println(jugadoresList.toString());
-
 
     }
 
 
+    /**
+     *  Este método lee la entrada del usuario para determinar qué tabla debe modificarse y luego llama al método correspondiente del controlador para modificar los registros de esa tabla.
+     */
 
     public void modificarRegistro(){
         System.out.println("Elige la tabla que desea eliminar un conjunto de registros. 1.Jugadores, 2.Mapas, 3.Armas, 4.Partidas");
@@ -183,6 +247,9 @@ public class DatabaseController {
 
     }
 
+    /**
+     * Este método lee la entrada del usuario para determinar qué tabla debe eliminarse y luego llama al método correspondiente del controlador para eliminar un registro de esa tabla.
+     */
     public void eliminarRegistro(){
         try {
             EntityManager em = entityManagerFactory.createEntityManager();
@@ -213,6 +280,10 @@ public class DatabaseController {
         }
 
     }
+
+    /**
+     * Este método lee la entrada del usuario para determinar qué tabla debe eliminarse y luego llama al método correspondiente del controlador para eliminar varios registros de esa tabla.
+     */
 
     public void eliminarConjunto(){
         System.out.println("Elige la tabla que desea eliminar un conjunto de registros. 1.Jugadores, 2.Mapas, 3.Armas, 4.Partidas");
@@ -344,6 +415,10 @@ public class DatabaseController {
         }
 
     }
+
+    /**
+     * Metodo que permite borrar todas las tablas de la base de datos
+     */
 
     public void eliminarTablas() {
         try{

@@ -6,6 +6,7 @@ import model.Partidas;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -29,22 +30,12 @@ public class PartidasController {
     this.entityManagerFactory = entityManagerFactory;
   }
 
+
   /**
-   * @param partidasFile Aquest String correspon amb l'arxiu on s'emmagatzemen les
-   *                     dades de les isntancies de Revista
-   * @return ArrayList d'objectes Revista, amb els seus articles i la
-   * informació de l'autor
-   * @throws IOException <dt><b>Preconditions:</b>
-   *                     <dd>
-   *                     filename<>nil </br> llistaRevistes<>nil </br>
-   *                     llistaRevistes.getRevista(i).getArticles()== nil</br>
-   *                     <dt><b>Postconditions:</b>
-   *                     <dd>
-   *                     llistaRevistes.getRevistes()<>nil</br>
-   *                     llistaRevistes.getRevista(i).getArticles()<>nil</br>
-   *                     llistaRevistes.getRevista(i).getArticle(j)<>nil</br>
-   *                     llistaRevistes
-   *                     .getRevista(i).getArticle(j).getAutor()<>nil</br>
+   * Permite leer los archivos csv y crear un objeto con la información del archivo
+   * @param partidasFile Pasar la ruta del archivo csv
+   * @return
+   * @throws IOException
    */
   public List<Partidas> readArticlesFile(String partidasFile) throws IOException {
     int idpartida;
@@ -94,6 +85,51 @@ public class PartidasController {
     }
     em.getTransaction().commit();
     em.close();
+  }
+
+  public void buscarPorTipo(){
+    Scanner sc = new Scanner(System.in);
+    System.out.println("Tipo de partida que quieres buscar");
+    String tipo = sc.next();
+    List<Partidas> lista= listajugadoresTipo(tipo);
+    for (Partidas partida : lista) {
+      System.out.println(partida.toString());
+    }
+  }
+
+  public List<Partidas> listajugadoresTipo(String tipo) {
+    EntityManager em = entityManagerFactory.createEntityManager();
+    TypedQuery<Partidas> query = em.createQuery("SELECT j FROM Partidas j WHERE j.type LIKE :tipo", Partidas.class);
+    query.setParameter("tipo", "%" + tipo + "%");
+    return query.getResultList();
+  }
+  public void buscarPorIDMayorQue(){
+    Scanner sc = new Scanner(System.in);
+    System.out.println("ID mayor que: ");
+    int id = sc.nextInt();
+    List<Partidas> lista= listaJugadorIDs(id);
+    for (Partidas partida : lista) {
+      System.out.println(partida.toString());
+    }
+  }
+
+  public List<Partidas> listaJugadorIDs(int id) {
+    EntityManager em = entityManagerFactory.createEntityManager();
+    TypedQuery<Partidas> query = em.createQuery("SELECT j FROM Partidas j WHERE j.idpartida > :id", Partidas.class);
+    query.setParameter("id", id);
+    return query.getResultList();
+  }
+  public void buscarPorId(){
+    Scanner sc = new Scanner(System.in);
+    System.out.println("ID de la partida que quieres buscar");
+    int id = sc.nextInt();
+    Partidas lista= listaId(id);
+    System.out.println(lista.toString());
+  }
+
+  public Partidas listaId(int id) {
+    EntityManager em = entityManagerFactory.createEntityManager();
+    return em.find(Partidas.class, id);
   }
 
   /* Method to UPDATE activity for an Article */

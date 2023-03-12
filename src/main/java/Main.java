@@ -94,7 +94,7 @@ public class Main {
           }
           break;
         case 6:
-          databaseController.buscarJugadorPorRank();
+          databaseController.consultasTablas();
           break;
 
         case 8:

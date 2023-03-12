@@ -7,14 +7,12 @@ import model.Partidas;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class MapasController {
   private Connection connection;
@@ -31,21 +29,10 @@ public class MapasController {
   }
 
   /**
-   * @param mapasFile Aquest String correspon amb l'arxiu on s'emmagatzemen les
-   *                     dades de les isntancies de Revista
-   * @return ArrayList d'objectes Revista, amb els seus articles i la
-   * informació de l'autor
-   * @throws IOException <dt><b>Preconditions:</b>
-   *                     <dd>
-   *                     filename<>nil </br> llistaRevistes<>nil </br>
-   *                     llistaRevistes.getRevista(i).getArticles()== nil</br>
-   *                     <dt><b>Postconditions:</b>
-   *                     <dd>
-   *                     llistaRevistes.getRevistes()<>nil</br>
-   *                     llistaRevistes.getRevista(i).getArticles()<>nil</br>
-   *                     llistaRevistes.getRevista(i).getArticle(j)<>nil</br>
-   *                     llistaRevistes
-   *                     .getRevista(i).getArticle(j).getAutor()<>nil</br>
+   * Permite leer los archivos csv y crear un objeto con la información del archivo
+   * @param mapasFile Pasar la ruta del archivo csv
+   * @return
+   * @throws IOException
    */
   public List<Mapas> readArticlesFile(String mapasFile) throws IOException {
     int idmapa;
@@ -102,6 +89,51 @@ public class MapasController {
     }
     em.getTransaction().commit();
     em.close();
+  }
+
+  public void buscarMapasPorNombre(){
+    Scanner sc = new Scanner(System.in);
+    System.out.println("Nombre del mapa que quieres buscar");
+    String tipo = sc.next();
+    List<Mapas> lista= listaMapasNombre(tipo);
+    for (Mapas arma : lista) {
+      System.out.println(arma.toString());
+    }
+  }
+
+  public List<Mapas> listaMapasNombre(String tipo) {
+    EntityManager em = entityManagerFactory.createEntityManager();
+    TypedQuery<Mapas> query = em.createQuery("SELECT j FROM Mapas j WHERE j.name LIKE :tipo", Mapas.class);
+    query.setParameter("tipo", "%" + tipo + "%");
+    return query.getResultList();
+  }
+  public void buscarPorWinsMayorQue(){
+    Scanner sc = new Scanner(System.in);
+    System.out.println("Wins mayor que: ");
+    int id = sc.nextInt();
+    List<Mapas> lista= listaWins(id);
+    for (Mapas mapa : lista) {
+      System.out.println(mapa.toString());
+    }
+  }
+
+  public List<Mapas> listaWins(int id) {
+    EntityManager em = entityManagerFactory.createEntityManager();
+    TypedQuery<Mapas> query = em.createQuery("SELECT j FROM Mapas j WHERE j.wins > :id", Mapas.class);
+    query.setParameter("id", id);
+    return query.getResultList();
+  }
+  public void buscarPorId(){
+    Scanner sc = new Scanner(System.in);
+    System.out.println("ID del mapa que quieres buscar");
+    int id = sc.nextInt();
+    Mapas lista= listaId(id);
+    System.out.println(lista.toString());
+  }
+
+  public Mapas listaId(int id) {
+    EntityManager em = entityManagerFactory.createEntityManager();
+    return em.find(Mapas.class, id);
   }
 
   /* Method to UPDATE activity for an Article */

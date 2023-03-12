@@ -7,6 +7,7 @@ import model.Partidas;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -32,21 +33,10 @@ public class ArmasController {
     }
 
     /**
-     * @param armasFile Aquest String correspon amb l'arxiu on s'emmagatzemen les
-     *                     dades de les isntancies de Revista
-     * @return ArrayList d'objectes Revista, amb els seus articles i la
-     * informació de l'autor
-     * @throws IOException <dt><b>Preconditions:</b>
-     *                     <dd>
-     *                     filename<>nil </br> llistaRevistes<>nil </br>
-     *                     llistaRevistes.getRevista(i).getArticles()== nil</br>
-     *                     <dt><b>Postconditions:</b>
-     *                     <dd>
-     *                     llistaRevistes.getRevistes()<>nil</br>
-     *                     llistaRevistes.getRevista(i).getArticles()<>nil</br>
-     *                     llistaRevistes.getRevista(i).getArticle(j)<>nil</br>
-     *                     llistaRevistes
-     *                     .getRevista(i).getArticle(j).getAutor()<>nil</br>
+     * Permite leer los archivos csv y crear un objeto con la información del archivo
+     * @param armasFile Pasar la ruta del archivo csv
+     * @return
+     * @throws IOException
      */
     public List<Armas> readArticlesFile(String armasFile) throws IOException {
         int idarma;
@@ -94,6 +84,51 @@ public class ArmasController {
         }
         em.getTransaction().commit();
         em.close();
+    }
+
+    public void buscarArmasPorTipo(){
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Tipo del arma que quieres buscar");
+        String tipo = sc.next();
+        List<Armas> lista= listajugadoresRank(tipo);
+        for (Armas arma : lista) {
+            System.out.println(arma.toString());
+        }
+    }
+
+    public List<Armas> listajugadoresRank(String tipo) {
+        EntityManager em = entityManagerFactory.createEntityManager();
+        TypedQuery<Armas> query = em.createQuery("SELECT j FROM Armas j WHERE j.type LIKE :tipo", Armas.class);
+        query.setParameter("tipo", "%" + tipo + "%");
+        return query.getResultList();
+    }
+    public void buscarPorIDMayorQue(){
+        Scanner sc = new Scanner(System.in);
+        System.out.println("ID mayor que: ");
+        int id = sc.nextInt();
+        List<Armas> lista= listaJugadorIDs(id);
+        for (Armas arma : lista) {
+            System.out.println(arma.toString());
+        }
+    }
+
+    public List<Armas> listaJugadorIDs(int id) {
+        EntityManager em = entityManagerFactory.createEntityManager();
+        TypedQuery<Armas> query = em.createQuery("SELECT j FROM Armas j WHERE j.idarma > :id", Armas.class);
+        query.setParameter("id", id);
+        return query.getResultList();
+    }
+    public void buscarPorId(){
+        Scanner sc = new Scanner(System.in);
+        System.out.println("ID del arma que quieres buscar");
+        int id = sc.nextInt();
+        Armas lista= listaId(id);
+        System.out.println(lista.toString());
+    }
+
+    public Armas listaId(int id) {
+        EntityManager em = entityManagerFactory.createEntityManager();
+        return em.find(Armas.class, id);
     }
 
     public void modificarRegistro() {

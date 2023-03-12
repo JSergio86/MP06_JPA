@@ -31,21 +31,10 @@ public class JugadoresController {
     }
 
     /**
-     * @param jugadoresFile Aquest String correspon amb l'arxiu on s'emmagatzemen les
-     *                     dades de les isntancies de Revista
-     * @return ArrayList d'objectes Revista, amb els seus articles i la
-     * informació de l'autor
-     * @throws IOException <dt><b>Preconditions:</b>
-     *                     <dd>
-     *                     filename<>nil </br> llistaRevistes<>nil </br>
-     *                     llistaRevistes.getRevista(i).getArticles()== nil</br>
-     *                     <dt><b>Postconditions:</b>
-     *                     <dd>
-     *                     llistaRevistes.getRevistes()<>nil</br>
-     *                     llistaRevistes.getRevista(i).getArticles()<>nil</br>
-     *                     llistaRevistes.getRevista(i).getArticle(j)<>nil</br>
-     *                     llistaRevistes
-     *                     .getRevista(i).getArticle(j).getAutor()<>nil</br>
+     * Permite leer los archivos csv y crear un objeto con la información del archivo
+     * @param jugadoresFile Pasar la ruta del archivo csv
+     * @return
+     * @throws IOException
      */
 
     public List<Jugadores> readArticlesFile(String jugadoresFile) throws IOException {
@@ -115,19 +104,47 @@ public class JugadoresController {
         em.close();
     }
 
-    public List<Jugadores> seleccionarJugadoresPorRank(String rank) {
+    public void buscarJugadorPorRank(){
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Rango del jugador que quieres buscar");
+        String rango = sc.next();
+        List<Jugadores> jugadoresList= listajugadoresRank(rango);
+        for (Jugadores jugador : jugadoresList) {
+            System.out.println(jugador.toString());
+        }
+    }
+
+    public List<Jugadores> listajugadoresRank(String rank) {
         EntityManager em = entityManagerFactory.createEntityManager();
         TypedQuery<Jugadores> query = em.createQuery("SELECT j FROM Jugadores j WHERE j.rank LIKE :rank", Jugadores.class);
         query.setParameter("rank", "%" + rank + "%");
         return query.getResultList();
     }
-    public List<Jugadores> seleccionarJugadoresPorWinsMayorQue(int wins) {
+    public void buscarJugadorPorWinsMayorQue(){
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Wins mayor que: ");
+        int wins = sc.nextInt();
+        List<Jugadores> jugadoresList= listaJugadorWins(wins);
+        for (Jugadores jugador : jugadoresList) {
+            System.out.println(jugador.toString());
+        }
+    }
+
+    public List<Jugadores> listaJugadorWins(int wins) {
         EntityManager em = entityManagerFactory.createEntityManager();
         TypedQuery<Jugadores> query = em.createQuery("SELECT j FROM Jugadores j WHERE j.wins > :wins", Jugadores.class);
         query.setParameter("wins", wins);
         return query.getResultList();
     }
-    public Jugadores seleccionarJugadorPorId(int id) {
+    public void buscarJugadorPorId(){
+        Scanner sc = new Scanner(System.in);
+        System.out.println("ID del jugador que quieres buscar");
+        int id = sc.nextInt();
+        Jugadores jugadoresList= listaJugadorId(id);
+        System.out.println(jugadoresList.toString());
+    }
+
+    public Jugadores listaJugadorId(int id) {
         EntityManager em = entityManagerFactory.createEntityManager();
         return em.find(Jugadores.class, id);
     }
