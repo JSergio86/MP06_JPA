@@ -68,7 +68,10 @@ public class MapasController {
     return mapasList;
   }
 
-
+  /**
+   * Metodo para añadir la información en la tabla
+   * @param mapas
+   */
   /* Method to CREATE a Partidas in the database */
   public void addMapas(Mapas mapas) {
     EntityManager em = entityManagerFactory.createEntityManager();
@@ -77,8 +80,9 @@ public class MapasController {
     em.getTransaction().commit();
     em.close();
   }
-
-  /* Method to READ all Articles */
+  /**
+   * Metodo para listar toda la tabla y imprimirlo por pantalla
+   */
   public void listArticles() {
     EntityManager em = entityManagerFactory.createEntityManager();
     em.getTransaction().begin();

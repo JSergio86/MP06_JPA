@@ -82,8 +82,10 @@ public class JugadoresController {
         return jugadoresList;
     }
 
-
-    /* Method to CREATE a Partidas in the database */
+    /**
+     * Metodo para añadir la información en la tabla
+     * @param jugadores
+     */
     public void addPartidas(Jugadores jugadores) {
         EntityManager em = entityManagerFactory.createEntityManager();
         em.getTransaction().begin();
@@ -92,7 +94,9 @@ public class JugadoresController {
         em.close();
     }
 
-    /* Method to READ all Articles */
+    /**
+     * Metodo para listar toda la tabla y imprimirlo por pantalla
+     */
     public void listArticles() {
         EntityManager em = entityManagerFactory.createEntityManager();
         em.getTransaction().begin();

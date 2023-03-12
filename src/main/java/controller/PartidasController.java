@@ -64,8 +64,10 @@ public class PartidasController {
     return partidaList;
   }
 
-
-  /* Method to CREATE a Partidas in the database */
+  /**
+   * Metodo para añadir la información en la tabla
+   * @param partidas
+   */
   public void addPartidas(Partidas partidas) {
     EntityManager em = entityManagerFactory.createEntityManager();
     em.getTransaction().begin();
@@ -74,7 +76,9 @@ public class PartidasController {
     em.close();
   }
 
-  /* Method to READ all Articles */
+  /**
+   * Metodo para listar toda la tabla y imprimirlo por pantalla
+   */
   public void listArticles() {
     EntityManager em = entityManagerFactory.createEntityManager();
     em.getTransaction().begin();
