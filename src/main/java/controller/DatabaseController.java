@@ -310,7 +310,6 @@ public class DatabaseController {
         int opcion = sc.nextInt();
 
         EntityManager em = entityManagerFactory.createEntityManager();
-        System.out.println("Pon la columna donde desea eliminar el conjunto de registros ");
         switch (opcion){
             case 1:
                 System.out.println("\nTabla: Jugadores");
@@ -329,7 +328,8 @@ public class DatabaseController {
                 partidasController.listArticles();
                 break;
         }
-
+        System.out.println();
+        System.out.println("Pon la columna donde desea eliminar el conjunto de registros ");
         String columna = sc.next();
 
 
