@@ -136,6 +136,9 @@ public class ArmasController {
         return em.find(Armas.class, id);
     }
 
+    /**
+     * Metodo para modificar un registro de la base de datos
+     */
     public void modificarRegistro() {
         Scanner sc = new Scanner(System.in);
         EntityManager em = entityManagerFactory.createEntityManager();
@@ -179,6 +182,9 @@ public class ArmasController {
         em.close();
     }
 
+    /**
+     * Metodo para eliminar un registro de la base de datos
+     */
     public void eliminarRegistro() {
         EntityManager em = entityManagerFactory.createEntityManager();
         Scanner sc = new Scanner(System.in);
@@ -202,6 +208,9 @@ public class ArmasController {
             throw new RuntimeException(e);
         }
     }
+    /**
+     * Metodo para eliminar una tabla en la base de datos
+     */
     public void deleteTable(){
         EntityManager em = entityManagerFactory.createEntityManager();
         em.getTransaction().begin();

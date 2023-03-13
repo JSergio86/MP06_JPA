@@ -136,7 +136,9 @@ public class PartidasController {
     return em.find(Partidas.class, id);
   }
 
-  /* Method to UPDATE activity for an Article */
+  /**
+   * Metodo para modificar un registro de la base de datos
+   */
   public void modificarRegistro() {
     Scanner sc = new Scanner(System.in);
     EntityManager em = entityManagerFactory.createEntityManager();
@@ -180,7 +182,9 @@ public class PartidasController {
     em.close();
   }
 
-  /* Method to DELETE an Article from the records */
+  /**
+   * Metodo para eliminar un registro de la base de datos
+   */
   public void eliminarRegistro() {
     EntityManager em = entityManagerFactory.createEntityManager();
     Scanner sc = new Scanner(System.in);
@@ -205,6 +209,9 @@ public class PartidasController {
     }
   }
 
+  /**
+   * Metodo para eliminar una tabla en la base de datos
+   */
   public void deleteTable(){
     EntityManager em = entityManagerFactory.createEntityManager();
     em.getTransaction().begin();

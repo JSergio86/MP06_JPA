@@ -95,6 +95,9 @@ public class MapasController {
     em.close();
   }
 
+  /**
+   * Metodo para buscar mapas por su nombre
+   */
   public void buscarMapasPorNombre(){
     Scanner sc = new Scanner(System.in);
     System.out.println("Nombre del mapa que quieres buscar");
@@ -104,6 +107,7 @@ public class MapasController {
       System.out.println(arma.toString());
     }
   }
+
 
   public List<Mapas> listaMapasNombre(String tipo) {
     EntityManager em = entityManagerFactory.createEntityManager();
@@ -140,7 +144,9 @@ public class MapasController {
     return em.find(Mapas.class, id);
   }
 
-  /* Method to UPDATE activity for an Article */
+  /**
+   * Metodo para modificar un registro de la base de datos
+   */
   public void modificarRegistro() {
     Scanner sc = new Scanner(System.in);
     EntityManager em = entityManagerFactory.createEntityManager();
@@ -211,7 +217,9 @@ public class MapasController {
     em.close();
   }
 
-  /* Method to DELETE an Article from the records */
+  /**
+   * Metodo para eliminar un registro de la base de datos
+   */
   public void eliminarRegistro() {
     EntityManager em = entityManagerFactory.createEntityManager();
     Scanner sc = new Scanner(System.in);
@@ -235,6 +243,9 @@ public class MapasController {
     }
   }
 
+  /**
+   * Metodo para eliminar una tabla en la base de datos
+   */
   public void deleteTable(){
     EntityManager em = entityManagerFactory.createEntityManager();
     em.getTransaction().begin();
