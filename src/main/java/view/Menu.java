@@ -13,7 +13,6 @@ public class Menu {
 
     public int mainMenu() {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
         do {
             System.out.println(" \nMENU PRINCIPAL \n");
             System.out.println("1. Crear tablas");
@@ -21,13 +20,12 @@ public class Menu {
             System.out.println("3. Borrar tablas");
             System.out.println("4. Listar una tabla");
             System.out.println("5. Listar tablas");
-            System.out.println("6. Listar texto/num concreto");
-            System.out.println("7. Listar condicion");
-            System.out.println("8. Modificar registro");
-            System.out.println("9. Eliminar un registro");
-            System.out.println("10. Eliminar un conjunto de registros");
-            System.out.println("11. Eliminar una tabla");
-            System.out.println("12. Sortir");
+            System.out.println("6. Consultas Tablas");
+            System.out.println("7. Modificar registro");
+            System.out.println("8. Eliminar un registro");
+            System.out.println("9. Eliminar un conjunto de registros");
+            System.out.println("10. Eliminar una tabla");
+            System.out.println("11. Sortir");
             System.out.println("Escoge una opcion: ");
             try {
                 option = Integer.parseInt(br.readLine());

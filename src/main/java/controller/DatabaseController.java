@@ -145,6 +145,26 @@ public class DatabaseController {
 
         switch (opcion){
             case 1:
+                System.out.println("\nTabla: Jugadores");
+                jugadoresController.listArticles();
+                break;
+            case 2:
+                System.out.println("\nTabla: Mapas");
+                mapasController.listArticles();
+                break;
+            case 3:
+                System.out.println("\nTabla: Armas");
+                armasController.listArticles();
+                break;
+            case 4:
+                System.out.println("\nTabla: Partidas");
+                partidasController.listArticles();
+                break;
+        }
+        System.out.println();
+
+        switch (opcion){
+            case 1:
                 System.out.println("Elige una opción para buscar en la tabla jugadores. 1.Por su rango, 2.Por sus wins mayor que, 3.Por su ID");
                 int opcionJugadores = sc.nextInt();
 

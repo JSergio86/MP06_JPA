@@ -66,7 +66,7 @@ public class Armas implements Serializable {
     public String toString() {
         return "Armas{" +
                 "idarma=" + idarma +
-                ", jugador=" + jugador +
+                ", jugador=" + jugador.getIdjugador() +
                 ", name='" + name + '\'' +
                 ", type='" + type + '\'' +
                 '}';

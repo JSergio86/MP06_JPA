@@ -97,15 +97,15 @@ public class Main {
           databaseController.consultasTablas();
           break;
 
-        case 8:
+        case 7:
           databaseController.modificarRegistro();
           break;
 
-        case 9:
+        case 8:
           databaseController.eliminarRegistro();
           break;
 
-        case 10:
+        case 9:
           databaseController.eliminarConjunto();
           break;
 
