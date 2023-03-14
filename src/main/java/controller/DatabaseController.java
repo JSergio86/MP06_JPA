@@ -304,7 +304,6 @@ public class DatabaseController {
     /**
      * Este método lee la entrada del usuario para determinar qué tabla debe eliminarse y luego llama al método correspondiente del controlador para eliminar varios registros de esa tabla.
      */
-
     public void eliminarConjunto(){
         System.out.println("Elige la tabla que desea eliminar un conjunto de registros. 1.Jugadores, 2.Mapas, 3.Armas, 4.Partidas");
         int opcion = sc.nextInt();
@@ -446,6 +445,32 @@ public class DatabaseController {
             jugadoresController.deleteTable();
             armasController.deleteTable();
             mapasController.deleteTable();
+            System.out.println("Tablas eliminadas correctamente");
+
+        } catch (Exception e){
+            System.out.println("Comprueba que las tablas esten creadas antes de eliminarlas. "+ e.getMessage());
+        }
+
+    }
+
+    public void eliminarUnaTabla() {
+        try{
+            System.out.println("Elige la tabla que desea eliminar. 1.Jugadores, 2.Mapas, 3.Armas, 4.Partidas");
+            int opcion = sc.nextInt();
+            switch (opcion){
+                case 1:
+                    jugadoresController.deleteTable();
+                    break;
+                case 2:
+                    mapasController.deleteTable();
+                    break;
+                case 3:
+                    armasController.deleteTable();
+                    break;
+                case 4:
+                    partidasController.deleteTable();
+                    break;
+            }
             System.out.println("Tablas eliminadas correctamente");
 
         } catch (Exception e){

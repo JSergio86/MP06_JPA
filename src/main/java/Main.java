@@ -109,6 +109,11 @@ public class Main {
           databaseController.eliminarConjunto();
           break;
 
+        case 10:
+          databaseController.eliminarUnaTabla();
+          break;
+
+
 
         default:
           System.out.println("Adeu!!");

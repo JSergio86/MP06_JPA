@@ -4,7 +4,7 @@
         <description> Persistence unit for the JPA-Hibernate example in UF2NF2 </description>
         <provider>org.hibernate.ejb.HibernatePersistence</provider>
         <properties>
-            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://192.168.22.127:5432/jpa"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://192.168.22.130:5432/jpa"/>
             <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
             <property name="javax.persistence.jdbc.user" value="sergio"/>
             <property name="javax.persistence.jdbc.password" value="password"/>
